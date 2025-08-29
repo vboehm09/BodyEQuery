@@ -1,0 +1,19 @@
+{
+  "name": "body-query",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "author": "Boehm",
+  "license": "MIT",
+  "keywords": ["SENAI", "API", "NodeJS", "Express"],
+  "description": "Projeto de API com filtro query e body",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
