@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
-const { animais } = dados
+const { varinhas } = dados
 
 // Criar aplicação com Express e configurar para aceitar JSON
 const app = express();
@@ -104,11 +104,6 @@ app.get('/animais', (req, res) => {
   });
 }); 
   
-
-
-
-
-
 app.post("/bruxos", (req, res) => {
   const { nome, casa, ano, varinha, mascote, patrono, especialidade, vivo } =req.body;
 
@@ -141,7 +136,32 @@ app.post("/bruxos", (req, res) => {
 
 });
 
+app.post("/varinhas", (req, res) => {
+  const { material, nucleo, comprimento } =req.body;
 
+  if (!material || !nucleo || !comprimento) {
+    return res.status(400).json({
+      sucess: false,
+      message: "Material, núcleo e comprimento são obrigatórios para uma varinha!",
+    });
+  }
+  
+  const novaVarinha = {
+    id: varinhas.length + 1,
+    material,
+    nucleo,
+    comprimento
+  }
+  
+  varinhas.push(novaVarinha);
+  
+  res.status(201).json({
+    sucess: true,
+    message: "Nova varinha adicionado a Hogwarts!",
+    data: novaVarinha,
+  })
+
+});
 
 
 // Iniciar servidor escutando na porta definida
