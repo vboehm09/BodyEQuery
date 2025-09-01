@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
-const { bruxos } = dados
+const { animais } = dados
 
 // Criar aplicação com Express e configurar para aceitar JSON
 const app = express();
@@ -45,6 +45,103 @@ app.get('/bruxos', (req, res) => {
       data: resultado
     });
 });
+
+app.get('/varinhas', (req, res) => {
+  const { material, nucleo, comprimento,  } = req.query;
+  let resultado = varinhas;
+
+  if (material) {
+    resultado = resultado.filter(b => b.material.toLowerCase().includes(material.toLowerCase()));
+  }
+
+  if (nucleo) {
+    resultado = resultado.filter(b => b.nucleo == nucleo);
+  }
+
+  if (comprimento) {
+    resultado = resultado.filter(b => b.comprimento.toLowerCase().includes(comprimento.toLowerCase()));
+  }
+
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+}); 
+
+app.get('/pocoes', (req, res) => {
+  const { nome, efeito  } = req.query;
+  let resultado = pocoes;
+
+  if (nome) {
+    resultado = resultado.filter(b => b.nome.toLowerCase().includes(nome.toLowerCase()));
+  }
+
+  if (efeito) {
+    resultado = resultado.filter(b => b.efeito == efeito);
+  }
+
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+}); 
+
+app.get('/animais', (req, res) => {
+  const { tipo, nome  } = req.query;
+  let resultado = animais;
+
+  if (tipo) {
+    resultado = resultado.filter(b => b.tipo.toLowerCase().includes(tipo.toLowerCase()));
+  }
+
+  if (nome) {
+    resultado = resultado.filter(b => b.nome == nome);
+  }
+
+  res.status(200).json({
+    total: resultado.length,
+    data: resultado
+  });
+}); 
+  
+
+
+
+
+
+app.post("/bruxos", (req, res) => {
+  const { nome, casa, ano, varinha, mascote, patrono, especialidade, vivo } =req.body;
+
+  if (!nome || !casa) {
+    return res.status(400).json({
+      sucess: false,
+      message: "Nome e casa são obrigatórios para um bruxo!",
+    });
+  }
+  
+  const novoBruxo = {
+    id: bruxos.length + 1,
+    nome,
+    casa,
+    ano: parseInt(ano),
+    varinha: varinha,
+    mascote,
+    patrono,
+    especialidade: especialidade || "Ainda não atribuido!",
+    vivo: vivo
+  }
+  
+  bruxos.push(novoBruxo);
+  
+  res.status(201).json({
+    sucess: true,
+    message: "Novo bruxo adicionado a Hogwarts!",
+    data: novoBruxo,
+  })
+
+});
+
+
 
 
 // Iniciar servidor escutando na porta definida
