@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 
 import dados from "./src/data/dados.js";
-const { varinhas } = dados
+const { bruxos, casas, varinhas, animais, pocoes } = dados
 
 // Criar aplicação com Express e configurar para aceitar JSON
 const app = express();
@@ -163,8 +163,55 @@ app.post("/varinhas", (req, res) => {
 
 });
 
+app.get("/stats", (req, res) => {
+  const { casa } = req.query;
+  let resultadoBruxos = bruxos;
 
-// Iniciar servidor escutando na porta definida
+  if (casa) {
+    resultadoBruxos = resultadoBruxos.filter(b => b.casa.toLowerCase().includes(casa.toLowerCase()));
+  }
+  res.status(200).json({
+    bruxos: `numero de bruxos = ${resultadoBruxos.length}`
+  })
+
+
+  //
+  const contagem = {};
+
+  for (let i = 0; i < varinhas.length; i++) {
+    const varinha = varinhas[i];
+    const material = varinha.material;
+
+    if (contagem[material]) {
+      contagem[material]++;
+    } else {
+      contagem[material] = 1;
+    } 
+  }
+  
+  let materialMaisFrequente = null;
+  let contagemMaxima = 0;
+
+  for (const material in contagem) {
+    if (contagem[material] > contagemMaxima) {
+      contagemMaxima = contagem[material];
+      materialMaisFrequente = material;
+    }
+  }
+
+  res.status(200).json({
+    bruxos: {
+      total: resultadoBruxos.length,
+      casa: casa,
+    },
+    varinhas: {
+      materialMaisFrequente: materialMaisFrequente,
+      contagemMaxima: contagemMaxima,
+    },
+  });
+});
+
 app.listen(serverPort, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${serverPort} 🚀`);
 });
+
